@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="add_a_new_game_session">Add a new game session</string>
+    <string name="small_blind">Small Blind</string>
+    <string name="big_blind">Big Blind</string>
+    <string name="ante">Ante</string>
+    <string name="date_yyyy_mm_dd">Date (YYYY-MM-DD)</string>
+    <string name="start_time_hh_mm_ss">Start Time (HH:MM:SS)</string>
+    <string name="cash_out_amount">Cash-Out Amount</string>
+    <string name="buy_in_amount">Buy-In Amount</string>
+    <string name="location">Location</string>
+    <string name="save">Save</string>
+</resources>

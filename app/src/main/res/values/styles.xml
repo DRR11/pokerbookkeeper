@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <!-- Customize the floating hint appearance -->
+        <item name="hintTextAppearance">@style/CustomHintTextAppearance</item>
+    </style>
+
+    <style name="CustomHintTextAppearance">
+        <item name="android:textColorHint">@color/custom_hint_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+</resources>
