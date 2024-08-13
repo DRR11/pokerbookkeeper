@@ -7,7 +7,6 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.example.myapplication.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -15,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private var isAddGameFragmentInBackStack = false
+    private var isWorkingOnAddingNewGame = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         navView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    if (isAddGameFragmentInBackStack) {
+                    if (isWorkingOnAddingNewGame) {
                         navController.popBackStack(R.id.add_game_fragment, false)
                     } else {
                         navController.popBackStack(R.id.navigation_home, false)
@@ -62,23 +61,27 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.add_game_fragment) {
-                isAddGameFragmentInBackStack = true
+                isWorkingOnAddingNewGame = true
                 navView.selectedItemId = R.id.navigation_home
             }
         }
     }
 
     override fun onBackPressed() {
-        val isOnAddGameFragment = navController.currentDestination?.id == R.id.add_game_fragment
-        if (isOnAddGameFragment) {
-            isAddGameFragmentInBackStack = false
-        }
+        maybeResetWorkingOnAddingNewGameFlag()
         super.onBackPressed()
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        isAddGameFragmentInBackStack = false
+        maybeResetWorkingOnAddingNewGameFlag()
         super.onSupportNavigateUp()
         return navController.navigateUp()
+    }
+
+    private fun maybeResetWorkingOnAddingNewGameFlag() {
+        val isOnAddGameFragment = navController.currentDestination?.id == R.id.add_game_fragment
+        if (isOnAddGameFragment) {
+            isWorkingOnAddingNewGame = false
+        }
     }
 }
