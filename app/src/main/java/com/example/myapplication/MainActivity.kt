@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private var isAddGameFragmentInBackStack = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,10 +34,50 @@ class MainActivity : AppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        navView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    if (isAddGameFragmentInBackStack) {
+                        navController.popBackStack(R.id.add_game_fragment, false)
+                    } else {
+                        navController.popBackStack(R.id.navigation_home, false)
+                    }
+                    true
+                }
+                R.id.navigation_dashboard -> {
+                    if (navController.currentDestination?.id != R.id.navigation_dashboard) {
+                        navController.navigate(R.id.navigation_dashboard)
+                    }
+                    true
+                }
+                R.id.navigation_notifications -> {
+                    if (navController.currentDestination?.id != R.id.navigation_notifications) {
+                        navController.navigate(R.id.navigation_notifications)
+                    }
+                    true
+                }
+                else -> false
+            }
+        }
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.add_game_fragment) {
+                isAddGameFragmentInBackStack = true
+                navView.selectedItemId = R.id.navigation_home
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+        val isOnAddGameFragment = navController.currentDestination?.id == R.id.add_game_fragment
+        if (isOnAddGameFragment) {
+            isAddGameFragmentInBackStack = false
+        }
+        super.onBackPressed()
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        isAddGameFragmentInBackStack = false
         super.onSupportNavigateUp()
         return navController.navigateUp()
     }

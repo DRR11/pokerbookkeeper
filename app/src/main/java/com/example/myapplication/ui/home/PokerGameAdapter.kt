@@ -34,5 +34,6 @@ class PokerGameAdapter(private var games: List<PokerGameSession>): RecyclerView.
 
     fun updateList(updatedGames: List<PokerGameSession>) {
         games = updatedGames
+        notifyDataSetChanged()
     }
 }

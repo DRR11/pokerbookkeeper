@@ -12,24 +12,37 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_home_to_add_game"
-            app:destination="@id/addGameFragment" />
+            app:destination="@id/add_game_fragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/addGameFragment"
+        android:id="@+id/add_game_fragment"
         android:name="com.example.myapplication.ui.home.AddGameFragment"
         android:label="Add Game">
+        <action
+            android:id="@+id/action_add_game_to_dashboard"
+            app:destination="@id/navigation_dashboard"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_add_game_to_notifications"
+            app:destination="@id/navigation_notifications"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.myapplication.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard">
+    </fragment>
+
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.myapplication.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_notifications" >
+    </fragment>
 </navigation>
