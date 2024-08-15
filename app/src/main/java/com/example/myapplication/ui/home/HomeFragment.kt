@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
+import com.example.myapplication.model.GameListItem
 import com.example.myapplication.repo.AppDB
 import com.example.myapplication.repo.PokerGameRepository
 import com.example.myapplication.viewmodel.PokerGameViewModel
@@ -38,10 +39,12 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        pokerGameAdapter = PokerGameAdapter(mutableListOf()) {game ->
+        pokerGameAdapter = PokerGameAdapter(mutableListOf()) { item ->
             // remove clicked
-            viewModel.removeGameSession(game.id)
-            pokerGameAdapter.removeItem(game)
+            if (item is GameListItem.Game) {
+                viewModel.removeGameSession(item.game.id)
+            }
+            pokerGameAdapter.removeItem(item)
         }
         gameListRecyclerView = view.findViewById(R.id.recyclerView)
         gameListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -57,7 +60,6 @@ class HomeFragment : Fragment() {
             setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.divider)!!)
         }
         gameListRecyclerView.addItemDecoration(dividerItemDecoration)
-
         gameListRecyclerView.addOnItemTouchListener(SwipeToShowRemoveHelper(gameListRecyclerView))
     }
 

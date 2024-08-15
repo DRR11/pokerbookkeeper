@@ -46,22 +46,4 @@ class PokerGameViewModel(private val repository: PokerGameRepository): ViewModel
             Log.d("PBK - repoGetAll", "Fetched sessions: ${sessions?.size}")
         }
     }
-
-    // Calculate earnings for graph plotting
-    fun calculateEarnings(): List<Pair<String?, Double>> {
-        // Calculate earnings for plotting
-        return _gameSessions.value?.map {
-            Pair(it.date, it.cashOutAmount - it.buyInAmount)
-        } ?: emptyList()
-    }
-
-    fun groupGamesByMonth(games: List<PokerGameSession>): List<Pair<String, List<PokerGameSession>>> {
-        val groupedGames = games.groupBy {
-            val dateFormat = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
-            dateFormat.format(it.date ?: Date()) // Adjust based on your date field
-        }
-        return groupedGames.entries
-            .sortedByDescending { SimpleDateFormat("MMMM yyyy", Locale.getDefault()).parse(it.key)?.time ?: 0L }
-            .map { it.key to it.value }
-    }
 }

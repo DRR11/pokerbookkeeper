@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.myapplication.model.PokerGameSession
 
-@Database(entities = [PokerGameSession::class], version = 1)
+@Database(entities = [PokerGameSession::class], version = 3)
+@TypeConverters(Converters::class)
 abstract class AppDB : RoomDatabase() {
     abstract fun pokerGameDao(): PokerGameDao
 
@@ -20,7 +22,9 @@ abstract class AppDB : RoomDatabase() {
                     context.applicationContext,
                     AppDB::class.java,
                     "poker_game_database"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration() // This allows for destructive migrations
+                    .build()
                 INSTANCE = instance
                 instance
             }

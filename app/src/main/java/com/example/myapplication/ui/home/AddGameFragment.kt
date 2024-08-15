@@ -16,6 +16,7 @@ import com.example.myapplication.repo.AppDB
 import com.example.myapplication.repo.PokerGameRepository
 import com.example.myapplication.viewmodel.PokerGameViewModel
 import com.example.myapplication.viewmodel.PokerGameViewModelFactory
+import java.util.Date
 
 class AddGameFragment : Fragment() {
 
@@ -65,7 +66,7 @@ class AddGameFragment : Fragment() {
                 smallBlind = smallBlind,
                 bigBlind = bigBlind,
                 ante = ante,
-                date = null,
+                date = Date(),
                 startTime = null,
                 endTime = null,
                 buyInAmount = buyInAmount,
