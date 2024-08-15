@@ -8,6 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.model.PokerGameSession
 import com.example.myapplication.repo.PokerGameRepository
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class PokerGameViewModel(private val repository: PokerGameRepository): ViewModel() {
     private val _gameSessions = MutableLiveData<List<PokerGameSession>>()
@@ -50,5 +53,15 @@ class PokerGameViewModel(private val repository: PokerGameRepository): ViewModel
         return _gameSessions.value?.map {
             Pair(it.date, it.cashOutAmount - it.buyInAmount)
         } ?: emptyList()
+    }
+
+    fun groupGamesByMonth(games: List<PokerGameSession>): List<Pair<String, List<PokerGameSession>>> {
+        val groupedGames = games.groupBy {
+            val dateFormat = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
+            dateFormat.format(it.date ?: Date()) // Adjust based on your date field
+        }
+        return groupedGames.entries
+            .sortedByDescending { SimpleDateFormat("MMMM yyyy", Locale.getDefault()).parse(it.key)?.time ?: 0L }
+            .map { it.key to it.value }
     }
 }

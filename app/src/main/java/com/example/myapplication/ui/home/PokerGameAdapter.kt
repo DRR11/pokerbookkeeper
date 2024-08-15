@@ -10,6 +10,12 @@ import com.example.myapplication.R
 import com.example.myapplication.model.PokerGameSession
 
 class PokerGameAdapter(private var games: MutableList<PokerGameSession>, private val onRemoveClick: (PokerGameSession) -> Unit): RecyclerView.Adapter<PokerGameAdapter.ViewHolder>() {
+
+    companion object {
+        private const val VIEW_TYPE_HEADER = 0
+        private const val VIEW_TYPE_ITEM = 1
+    }
+
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         private val gameView: TextView = itemView.findViewById(R.id.game_session_item)
         private val removeText: TextView = itemView.findViewById(R.id.remove_text)

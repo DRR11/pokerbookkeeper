@@ -61,9 +61,14 @@ class MainActivity : AppCompatActivity(), AddGameFragment.FinishedAddNewGameList
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.add_game_fragment) {
-                isWorkingOnAddingNewGame = true
-                navView.selectedItemId = R.id.navigation_home
+            when (destination.id) {
+                R.id.add_game_fragment -> {
+                    isWorkingOnAddingNewGame = true
+                    navView.selectedItemId = R.id.navigation_home
+                }
+                R.id.navigation_home -> navView.selectedItemId = R.id.navigation_home
+                R.id.navigation_dashboard -> navView.selectedItemId = R.id.navigation_dashboard
+                R.id.navigation_notifications -> navView.selectedItemId = R.id.navigation_notifications
             }
         }
     }
