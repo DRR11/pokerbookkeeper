@@ -46,11 +46,7 @@ class SwipeToRemoveHelper(private val recyclerView: RecyclerView) : RecyclerView
         val removeText = row?.findViewById<TextView>(R.id.remove_text) ?: return
         initialRemoveTextX = removeText.x
         removeText.let {
-            val swipeMinToShow = 200f
-            val swipeMax = row.width / 3.0f
-            val swipeDestinationX = row.width - event.x
-            Log.d("PBK - swipe", "event.x: " + event.x + ", left: " + (row.left ?: "null") + ", distanceX: " + distanceX)
-
+            val swipeMinToShow = it.width.coerceAtMost(row.width)
             if (distanceX < 0) {
                 animate(it, removeText.x, row.width.toFloat(), false)
             } else if (event.x > swipeMinToShow) {
@@ -62,7 +58,7 @@ class SwipeToRemoveHelper(private val recyclerView: RecyclerView) : RecyclerView
     private fun animate(view: TextView, startX: Float, endX: Float, isShow: Boolean) {
         view.post {
             val widthAnimator = ObjectAnimator.ofFloat(startX, endX).apply {
-                duration = 300 // Duration of the width animation
+                duration = 300
                 addUpdateListener {
                     view.x = it.animatedValue as Float
                 }
@@ -81,13 +77,9 @@ class SwipeToRemoveHelper(private val recyclerView: RecyclerView) : RecyclerView
                         }
                     }
 
-                    override fun onAnimationCancel(p0: Animator) {
+                    override fun onAnimationCancel(p0: Animator) {}
 
-                    }
-
-                    override fun onAnimationRepeat(p0: Animator) {
-
-                    }
+                    override fun onAnimationRepeat(p0: Animator) {}
 
                 })
             }
