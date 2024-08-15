@@ -1,16 +1,16 @@
 package com.example.myapplication.ui.home
 
-import SwipeToRemoveHelper
+import SwipeToShowRemoveHelper
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
@@ -38,16 +38,27 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        pokerGameAdapter = PokerGameAdapter(emptyList())
+        pokerGameAdapter = PokerGameAdapter(mutableListOf()) {game ->
+            // remove clicked
+            viewModel.removeGameSession(game.id)
+            pokerGameAdapter.removeItem(game)
+        }
         gameListRecyclerView = view.findViewById(R.id.recyclerView)
         gameListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         gameListRecyclerView.adapter = pokerGameAdapter
 
-
         addNewGameButton = view.findViewById(R.id.add_game_button)
         addNewGameButton.setOnClickListener(addGameClickListener)
 
-        gameListRecyclerView.addOnItemTouchListener(SwipeToRemoveHelper(gameListRecyclerView))
+        val dividerItemDecoration = DividerItemDecoration(
+            gameListRecyclerView.context,
+            LinearLayoutManager.VERTICAL
+        ).apply {
+            setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.divider)!!)
+        }
+        gameListRecyclerView.addItemDecoration(dividerItemDecoration)
+
+        gameListRecyclerView.addOnItemTouchListener(SwipeToShowRemoveHelper(gameListRecyclerView))
     }
 
     override fun onResume() {
@@ -58,9 +69,5 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private val addGameClickListener = object: View.OnClickListener {
-        override fun onClick(view: View?) {
-            findNavController().navigate(R.id.action_home_to_add_game)
-        }
-    }
+    private val addGameClickListener = View.OnClickListener { findNavController().navigate(R.id.action_home_to_add_game) }
 }

@@ -1,15 +1,15 @@
 package com.example.myapplication.ui.home
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.example.myapplication.R
 import com.example.myapplication.model.PokerGameSession
 import com.example.myapplication.repo.AppDB
@@ -22,6 +22,12 @@ class AddGameFragment : Fragment() {
     private val viewModel: PokerGameViewModel by activityViewModels {
         PokerGameViewModelFactory(PokerGameRepository(AppDB.getDatabase(requireContext()).pokerGameDao()))
     }
+
+    interface FinishedAddNewGameListener {
+        fun onFinishedAddNewGame()
+    }
+
+    private var finishedAddNewGameListener: FinishedAddNewGameListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,7 +73,34 @@ class AddGameFragment : Fragment() {
                 location = null
             )
             viewModel.addGameSession(gameSession)
+            hideKeyboard()
+            finishedAddNewGameListener?.onFinishedAddNewGame()
             requireActivity().supportFragmentManager.popBackStack()
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FinishedAddNewGameListener) {
+            finishedAddNewGameListener = context
+        } else {
+            throw ClassCastException("$context must implement OnFlagResetListener")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        finishedAddNewGameListener = null
+    }
+
+    private fun hideKeyboard() {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        // Find the currently focused view
+        val currentFocus = activity?.currentFocus
+        if (currentFocus != null) {
+            imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+        } else {
+            imm.hideSoftInputFromWindow(View(requireContext()).windowToken, 0)
         }
     }
 }

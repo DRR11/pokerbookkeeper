@@ -4,16 +4,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.model.PokerGameSession
 
-class PokerGameAdapter(private var games: List<PokerGameSession>): RecyclerView.Adapter<PokerGameAdapter.ViewHolder>() {
-
+class PokerGameAdapter(private var games: MutableList<PokerGameSession>, private val onRemoveClick: (PokerGameSession) -> Unit): RecyclerView.Adapter<PokerGameAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        private val textView: TextView =itemView.findViewById(R.id.game_session_item)
+        private val gameView: TextView = itemView.findViewById(R.id.game_session_item)
+        private val removeText: TextView = itemView.findViewById(R.id.remove_text)
         fun bind(game: PokerGameSession) {
-            textView.text = game.id.toString()
+            val earning = game.cashOutAmount - game.buyInAmount
+            var earningDisplayText = String.format("%.0f", earning)
+            if (earning >= 0) {
+                earningDisplayText = "+" + earningDisplayText
+                gameView.setTextColor(ContextCompat.getColor(itemView.context, R.color.positive_outcome))
+            } else {
+                gameView.setTextColor(ContextCompat.getColor(itemView.context, R.color.negative_outcome))
+            }
+            gameView.setText(earningDisplayText)
+            removeText.setOnClickListener {
+                onRemoveClick(game)
+            }
         }
     }
 
@@ -33,7 +45,16 @@ class PokerGameAdapter(private var games: List<PokerGameSession>): RecyclerView.
     }
 
     fun updateList(updatedGames: List<PokerGameSession>) {
-        games = updatedGames
+        games.clear()
+        games.addAll(updatedGames)
         notifyDataSetChanged()
+    }
+
+    fun removeItem(game: PokerGameSession) {
+        val position = games.indexOf(game)
+        if (position != -1) {
+            games.removeAt(position)
+            notifyItemRemoved(position)
+        }
     }
 }

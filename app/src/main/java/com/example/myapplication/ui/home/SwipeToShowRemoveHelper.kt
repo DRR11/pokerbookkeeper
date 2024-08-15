@@ -1,6 +1,5 @@
 import android.animation.Animator
 import android.animation.ObjectAnimator
-import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -8,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 
-class SwipeToRemoveHelper(private val recyclerView: RecyclerView) : RecyclerView.OnItemTouchListener {
+class SwipeToShowRemoveHelper(private val recyclerView: RecyclerView) : RecyclerView.OnItemTouchListener {
 
     private var initialRemoveTextX: Float = 0.0f
 

@@ -8,8 +8,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.myapplication.databinding.ActivityMainBinding
+import com.example.myapplication.ui.home.AddGameFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AddGameFragment.FinishedAddNewGameListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -83,5 +84,9 @@ class MainActivity : AppCompatActivity() {
         if (isOnAddGameFragment) {
             isWorkingOnAddingNewGame = false
         }
+    }
+
+    override fun onFinishedAddNewGame() {
+        isWorkingOnAddingNewGame = false
     }
 }
