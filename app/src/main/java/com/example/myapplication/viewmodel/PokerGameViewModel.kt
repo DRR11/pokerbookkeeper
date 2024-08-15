@@ -43,7 +43,6 @@ class PokerGameViewModel(private val repository: PokerGameRepository): ViewModel
     private fun fetchGameSessions() = viewModelScope.launch {
         repository.getAllGameSessions().observeForever { sessions ->
             _gameSessions.value = sessions
-            Log.d("PBK - repoGetAll", "Fetched sessions: ${sessions?.size}")
         }
     }
 }

@@ -66,7 +66,6 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.gameSessions.observe(viewLifecycleOwner) { games ->
-            Log.d("PBK - home observer", viewModel.gameSessions.value?.size.toString())
             games?.let { pokerGameAdapter.updateList(it) }
         }
     }

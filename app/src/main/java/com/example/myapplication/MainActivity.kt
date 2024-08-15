@@ -1,6 +1,12 @@
 package com.example.myapplication
 
+import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
+import android.util.TypedValue
+import android.view.View
+import android.view.ViewTreeObserver
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -16,6 +22,8 @@ class MainActivity : AppCompatActivity(), AddGameFragment.FinishedAddNewGameList
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private var isWorkingOnAddingNewGame = false
+    private lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var topView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +31,7 @@ class MainActivity : AppCompatActivity(), AddGameFragment.FinishedAddNewGameList
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navView: BottomNavigationView = binding.navView
+        bottomNavigationView = binding.navView
 
         navController = findNavController(R.id.nav_host_fragment_activity_main)
         // Passing each menu ID as a set of Ids because each
@@ -34,7 +42,7 @@ class MainActivity : AppCompatActivity(), AddGameFragment.FinishedAddNewGameList
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setOnItemSelectedListener { item ->
+        bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
                     if (isWorkingOnAddingNewGame) {
@@ -64,13 +72,15 @@ class MainActivity : AppCompatActivity(), AddGameFragment.FinishedAddNewGameList
             when (destination.id) {
                 R.id.add_game_fragment -> {
                     isWorkingOnAddingNewGame = true
-                    navView.selectedItemId = R.id.navigation_home
+                    bottomNavigationView.selectedItemId = R.id.navigation_home
                 }
-                R.id.navigation_home -> navView.selectedItemId = R.id.navigation_home
-                R.id.navigation_dashboard -> navView.selectedItemId = R.id.navigation_dashboard
-                R.id.navigation_notifications -> navView.selectedItemId = R.id.navigation_notifications
+                R.id.navigation_home -> bottomNavigationView.selectedItemId = R.id.navigation_home
+                R.id.navigation_dashboard -> bottomNavigationView.selectedItemId = R.id.navigation_dashboard
+                R.id.navigation_notifications -> bottomNavigationView.selectedItemId = R.id.navigation_notifications
             }
         }
+
+        addKeyboardDetectListener()
     }
 
     override fun onBackPressed() {
@@ -93,5 +103,29 @@ class MainActivity : AppCompatActivity(), AddGameFragment.FinishedAddNewGameList
 
     override fun onFinishedAddNewGame() {
         isWorkingOnAddingNewGame = false
+    }
+
+    private val keyboardVisibilityListener = ViewTreeObserver.OnGlobalLayoutListener {
+        val heightDifference = topView.rootView.height - topView.height
+        Log.d("PBK - keyboardDetect", "${topView.rootView.height}" + ", " + "${topView.height}")
+        if (heightDifference > 500) {
+            // keyboard shown
+            bottomNavigationView.visibility = View.GONE
+        } else {
+            // keyboard hidden
+            bottomNavigationView.visibility = View.VISIBLE
+
+        }
+    }
+
+    private fun addKeyboardDetectListener(){
+        topView = window.decorView.findViewById<View>(android.R.id.content)
+        topView.viewTreeObserver.addOnGlobalLayoutListener(keyboardVisibilityListener)
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        topView.viewTreeObserver.removeOnGlobalLayoutListener(keyboardVisibilityListener)
     }
 }
