@@ -1,8 +1,8 @@
 package com.example.myapplication.viewmodel
 
-import PokerGameRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.myapplication.repo.PokerGameRepository
 
 class PokerGameViewModelFactory(
     private val repository: PokerGameRepository

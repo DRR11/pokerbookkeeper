@@ -1,25 +1,25 @@
 package com.example.myapplication.ui.home
 
-import PokerGameRepository
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.example.myapplication.R
 import com.example.myapplication.model.PokerGameSession
 import com.example.myapplication.repo.AppDB
+import com.example.myapplication.repo.PokerGameRepository
 import com.example.myapplication.viewmodel.PokerGameViewModel
 import com.example.myapplication.viewmodel.PokerGameViewModelFactory
 
 class AddGameFragment : Fragment() {
 
-    private val viewModel: PokerGameViewModel by viewModels {
+    private val viewModel: PokerGameViewModel by activityViewModels {
         PokerGameViewModelFactory(PokerGameRepository(AppDB.getDatabase(requireContext()).pokerGameDao()))
     }
 

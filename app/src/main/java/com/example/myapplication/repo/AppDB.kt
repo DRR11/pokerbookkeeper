@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.myapplication.model.PokerGameDao
 import com.example.myapplication.model.PokerGameSession
 
 @Database(entities = [PokerGameSession::class], version = 1)
